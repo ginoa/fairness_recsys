@@ -14,7 +14,10 @@ import pandas as pd
 
 resp = urlopen("http://files.grouplens.org/datasets/movielens/ml-100k.zip")
 zipfile = ZipFile(BytesIO(resp.read()))
-foofile = zipfile.open('ml-100k/u.data')
-user_data = pd.read_csv(foofile, compression='gzip', sep='\\t')
 #%%
+foofile = zipfile.open('ml-100k/u.data')
+data_ratings = pd.read_csv(foofile, usecols = [0,1,2], header = None, names = ['user_id','item_id','rating'], sep='\t')
+
+foofile = zipfile.open('ml-100k/u.user')
+data_users = pd.read_csv(foofile, header = None, names = ['user_id','user_age','user_gender','user_occupation','user_zipcode'], sep='|')
 
