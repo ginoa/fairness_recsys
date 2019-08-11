@@ -1,3 +1,6 @@
+import tensorflow as tf
+import numpy as np
+
 class Autoencoder:
     def __init__(self, D, d):
         # Input placeholder, "None" here means any size e.g. (13,D), (420,D), etc.
