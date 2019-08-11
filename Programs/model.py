@@ -14,17 +14,16 @@ class Autoencoder:
         self.W2 = tf.Variable(tf.random_normal(shape=(d,D)))
         self.b2 = tf.Variable(np.zeros(D).astype(np.float32))
         
-        # Output
+        # hidden layer
         self.Z = tf.nn.relu( tf.matmul(self.X, self.W1) + self.b1 )
-        logits = tf.matmul(self.Z, self.W2) + self.b2 
-        self.X_hat = tf.nn.sigmoid(logits)
+        
+        # output layer
+        self.X_hat = tf.nn.sigmoid(tf.matmul(self.Z, self.W2) + self.b2)
         
         # Define loss function
-        self.loss = tf.reduce_sum(
-            tf.losses.mean_squared_error(
-                labels=self.X,
-                predictions=self.X_hat
-            )
+        self.loss = tf.losses.mean_squared_error(
+            labels=self.X,
+            predictions=self.X_hat
         )
                 
         self.optimizer = tf.train.RMSPropOptimizer(learning_rate=0.005).minimize(self.loss)
