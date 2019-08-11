@@ -21,15 +21,13 @@ class Autoencoder:
         
         # Define loss function
         self.loss = tf.reduce_sum(
-            tf.nn.sigmoid_cross_entropy_with_logits(
-                # Expected result (a.k.a. itself for autoencoder)
+            tf.losses.mean_squared_error(
                 labels=self.X,
-                logits=logits
+                predictions=self.X_hat
             )
         )
                 
         self.optimizer = tf.train.RMSPropOptimizer(learning_rate=0.005).minimize(self.loss)
-        
         self.init_op = tf.global_variables_initializer()
         self.sess = tf.get_default_session() 
         if(self.sess == None):
