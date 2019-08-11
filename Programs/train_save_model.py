@@ -1,3 +1,4 @@
+import os
 import numpy as np
 import pandas as pd
 import tensorflow as tf
@@ -5,6 +6,15 @@ import tensorflow as tf
 from sklearn import preprocessing
 from sklearn.metrics import precision_score
 
+from io import BytesIO
+from zipfile import ZipFile
+from urllib.request import urlopen
+
+import model
+
+os.chdir("C:\\Users\\errat\\Documents\\GitHub\\fairness_recsys\\Programs")
+
+#%% set variables
 k = 10
 
 epochs = 10
@@ -14,16 +24,18 @@ learning_rate = 0.3
 
 batch_size = 250
 
-train_data = "./train-1m.tsv"
-test_data = "./test-1m.tsv"
+# load data
 
-# Reading dataset
+resp = urlopen("http://files.grouplens.org/datasets/movielens/ml-100k.zip")
+zipfile = ZipFile(BytesIO(resp.read()))
+#
+foofile = zipfile.open('ml-100k/u1.base')
+df = pd.read_csv(foofile, usecols = [0,1,2], header = None, names = ['user_id','item_id','rating'], sep='\t')
 
-df = pd.read_csv(train_data, sep='\t', names=['user', 'item', 'rating', 'timestamp'], header=None)
-df = df.drop('timestamp', axis=1)
+num_items = df.item_id.nunique()
+num_users = df.user_id.nunique()
 
-num_items = df.item.nunique()
-num_users = df.user.nunique()
+#%%
 
 print("USERS: {} ITEMS: {}".format(num_users, num_items))
 
@@ -39,7 +51,7 @@ df['rating'] = df_normalized
 
 # Convert DataFrame in user-item matrix
 
-matrix = df.pivot(index='user', columns='item', values='rating')
+matrix = df.pivot(index='user_id', columns='item_id', values='rating')
 matrix.fillna(0, inplace=True)
 
 
@@ -48,7 +60,7 @@ matrix.fillna(0, inplace=True)
 users = matrix.index.tolist()
 items = matrix.columns.tolist()
 
-matrix = matrix.as_matrix()
+matrix = matrix.values
 
 print("Matrix shape: {}".format(matrix.shape))
 
@@ -56,7 +68,7 @@ print("Matrix shape: {}".format(matrix.shape))
 # num_items = matrix.shape[1]
 # print("USERS: {} ITEMS: {}".format(num_users, num_items))
 
-
+#%%
 # Network Parameters
 
 num_input = num_items   # num of items
