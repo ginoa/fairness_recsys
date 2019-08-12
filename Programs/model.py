@@ -2,17 +2,17 @@ import tensorflow as tf
 import numpy as np
 
 class Autoencoder:
-    def __init__(self, D, d):
-        # Input placeholder, "None" here means any size e.g. (13,D), (420,D), etc.
-        self.X = tf.placeholder(tf.float32, shape=(None, D))
+    def __init__(self, input_size, hidden_layer_size):
+        # Input placeholder, "None" here means any size e.g. (13,input_size), (420,input_size), etc.
+        self.X = tf.placeholder(tf.float32, shape=(None, input_size))
         
-        # Input to hidden (D -> d)
-        self.W1 = tf.Variable(tf.random_normal(shape=(D,d)))
-        self.b1 = tf.Variable(np.zeros(d).astype(np.float32))
+        # Input to hidden (input_size -> hidden_layer_size)
+        self.W1 = tf.Variable(tf.random_normal(shape=(input_size,hidden_layer_size)))
+        self.b1 = tf.Variable(np.zeros(hidden_layer_size).astype(np.float32))
         
-        # Hidden -> output (d -> D)
-        self.W2 = tf.Variable(tf.random_normal(shape=(d,D)))
-        self.b2 = tf.Variable(np.zeros(D).astype(np.float32))
+        # Hidden -> output (hidden_layer_size -> input_size)
+        self.W2 = tf.Variable(tf.random_normal(shape=(hidden_layer_size,input_size)))
+        self.b2 = tf.Variable(np.zeros(input_size).astype(np.float32))
         
         # hidden layer
         self.Z = tf.nn.relu( tf.matmul(self.X, self.W1) + self.b1 )
