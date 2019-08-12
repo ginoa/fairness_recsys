@@ -53,3 +53,7 @@ print("Matrix shape: {}".format(matrix.shape))
 # num_users = matrix.shape[0]
 # num_items = matrix.shape[1]
 # print("USERS: {} ITEMS: {}".format(num_users, num_items))
+
+#%% Define and train model
+mymodel = model.Autoencoder(input_size=len(items),hidden_layer_size=100)
+mymodel.fit(X=matrix)
