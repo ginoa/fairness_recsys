@@ -4,7 +4,7 @@ import numpy as np
 class Autoencoder:
     def __init__(self, input_size, hidden_layer_size):
         # Input placeholder, "None" here means any size e.g. (13,input_size), (420,input_size), etc.
-        self.X = tf.placeholder(tf.float32, shape=(None, input_size))
+        self.X = tf.placeholder(tf.float32, shape=(None, input_size), name='input_layer')
         
         # Input to hidden (input_size -> hidden_layer_size)
         self.W1 = tf.Variable(tf.random_normal(shape=(input_size,hidden_layer_size)))
@@ -15,15 +15,16 @@ class Autoencoder:
         self.b2 = tf.Variable(np.zeros(input_size).astype(np.float32))
         
         # hidden layer
-        self.Z = tf.nn.relu( tf.matmul(self.X, self.W1) + self.b1 )
+        self.Z = tf.nn.relu( tf.matmul(self.X, self.W1) + self.b1, name='hidden_layer')
         
         # output layer
-        self.X_hat = tf.nn.sigmoid(tf.matmul(self.Z, self.W2) + self.b2)
+        self.X_hat = tf.nn.sigmoid(tf.matmul(self.Z, self.W2) + self.b2, name='output_layer')
         
         # Define loss function
         self.loss = tf.losses.mean_squared_error(
             labels=self.X,
-            predictions=self.X_hat
+            predictions=self.X_hat,
+            weights=tf.greater(self.X,0)
         )
                 
         self.optimizer = tf.train.RMSPropOptimizer(learning_rate=0.005).minimize(self.loss)
