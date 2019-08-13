@@ -24,7 +24,7 @@ class Autoencoder:
         self.loss = tf.losses.mean_squared_error(
             labels=self.X,
             predictions=self.X_hat,
-            weights=tf.greater(self.X,0)
+            weights=tf.greater(self.X,0) #adds weights to ignore 0s
         )
                 
         self.optimizer = tf.train.RMSPropOptimizer(learning_rate=0.005).minimize(self.loss)
