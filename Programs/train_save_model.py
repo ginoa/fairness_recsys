@@ -1,10 +1,7 @@
 import os
-import numpy as np
 import pandas as pd
-import tensorflow as tf
 
 from sklearn import preprocessing
-from sklearn.metrics import precision_score
 
 from io import BytesIO
 from zipfile import ZipFile
@@ -56,4 +53,4 @@ print("Matrix shape: {}".format(matrix.shape))
 
 #%% Define and train model
 mymodel = model.Autoencoder(input_size=len(items),hidden_layer_size=100)
-mymodel.fit(X=matrix)
+mymodel.fit(X=matrix,epochs=200)
